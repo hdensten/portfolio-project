@@ -1,4 +1,4 @@
-# React/Redux/Router Starter Project
+# Hannah Densten's React Portfolio Application
 
 > Provided for the students of the [Bottega Code School](https://bottega.tech/)
 
