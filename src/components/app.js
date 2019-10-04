@@ -29,7 +29,7 @@ export default class App extends Component {
                 exact
                 path="/portfolio/:slug"
                 component={PortfolioDetail}
-              ></Route>
+              />
               <Route component={NoMatch} />
             </Switch>
           </div>

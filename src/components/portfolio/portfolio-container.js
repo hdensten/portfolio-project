@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import axios from "axios";
 
 import PortfolioItem from "./portfolio-item";
 
@@ -9,25 +10,7 @@ export default class PortfolioContainer extends Component {
     this.state = {
       pageTitle: "Welcome to My Portfolio",
       isLoading: false,
-      data: [
-        {
-          title: "UMass Amherst",
-          category: "Education",
-          slug: "umass-amherst"
-        },
-        {
-          title: "Tighe & Bond",
-          category: "Civil Engineering",
-          slug: "tighe-and-bond"
-        },
-        {
-          title: "Bohler Engineering",
-          category: "Civil Engineering",
-          slug: "bohler-engineering"
-        },
-        { title: "Bottega", category: "Education", slug: "bottega" },
-        { title: "Ivanti", category: "Software Development", slug: "ivanti" }
-      ]
+      data: []
     };
 
     this.handleFilter = this.handleFilter.bind(this);
@@ -41,18 +24,27 @@ export default class PortfolioContainer extends Component {
     });
   }
 
+  getPortfolioItems() {
+    axios
+      .get("https://hannahdensten.devcamp.space/portfolio/portfolio_items")
+      .then(response => {
+        this.setState({
+          data: response.data.portfolio_items
+        });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
   portfolioItems() {
     return this.state.data.map(item => {
-      return (
-        <PortfolioItem title={item.title} url={"umass.edu"} slug={item.slug} />
-      );
+      return <PortfolioItem key={item.id} item={item} />;
     });
   }
 
-  handlePageTitleUpdate() {
-    this.setState({
-      pageTitle: "Something Else"
-    });
+  componentDidMount() {
+    this.getPortfolioItems();
   }
 
   render() {
