@@ -55,7 +55,10 @@ export default class PortfolioForm extends Component {
         description: description || "",
         category: category || "Education",
         position: position || "",
-        url: url || ""
+        url: url || "",
+        editMode: false,
+        apiUrl: `https://hannahdensten.devcamp.space/portfolio/portfolio_items/${id}`,
+        apiAction: "patch"
       });
     }
   }
@@ -119,11 +122,12 @@ export default class PortfolioForm extends Component {
   }
 
   handleSubmit(event) {
-    Axios.post(
-      "https://hannahdensten.devcamp.space/portfolio/portfolio_items",
-      this.buildForm(),
-      { withCredentials: true }
-    )
+    Axios({
+      method: this.state.apiAction,
+      url: this.state.apiUrl,
+      data: this.buildForm(),
+      withCredentials: true
+    })
       .then(response => {
         this.props.handleSuccessfulFormSubmission(response.data.portfolio_item);
 
