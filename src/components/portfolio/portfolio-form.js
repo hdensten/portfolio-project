@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Axios from "axios";
+import axios from "axios";
 import DropzoneComponent from "react-dropzone-component";
 
 import "../../../node_modules/react-dropzone-component/styles/filepicker.css";
@@ -12,7 +12,7 @@ export default class PortfolioForm extends Component {
     this.state = {
       name: "",
       description: "",
-      category: "Education",
+      category: "eCommerce",
       position: "",
       url: "",
       thumb_image: "",
@@ -30,6 +30,7 @@ export default class PortfolioForm extends Component {
     this.handleThumbDrop = this.handleThumbDrop.bind(this);
     this.handleBannerDrop = this.handleBannerDrop.bind(this);
     this.handleLogoDrop = this.handleLogoDrop.bind(this);
+    this.deleteImage = this.deleteImage.bind(this);
 
     this.thumbRef = React.createRef();
     this.bannerRef = React.createRef();
@@ -37,17 +38,18 @@ export default class PortfolioForm extends Component {
   }
 
   deleteImage(imageType) {
-    Axios.delete(
-      `https://api.devcamp.space/portfolio/delete-portfolio-image/${this.state.id}?image_type=${imageType}`,
-      { withCredentials: true }
-    )
+    axios
+      .delete(
+        `https://api.devcamp.space/portfolio/delete-portfolio-image/${this.state.id}?image_type=${imageType}`,
+        { withCredentials: true }
+      )
       .then(response => {
         this.setState({
           [`${imageType}_url`]: ""
         });
       })
       .catch(error => {
-        console.log("delete error", error);
+        console.log("deleteImage error", error);
       });
   }
 
@@ -71,15 +73,15 @@ export default class PortfolioForm extends Component {
         id: id,
         name: name || "",
         description: description || "",
-        category: category || "Education",
+        category: category || "eCommerce",
         position: position || "",
         url: url || "",
         editMode: true,
         apiUrl: `https://hannahdensten.devcamp.space/portfolio/portfolio_items/${id}`,
         apiAction: "patch",
-        thumb_image: thumb_image_url || "",
-        banner_image: banner_image_url || "",
-        logo: logo_url || ""
+        thumb_image_url: thumb_image_url || "",
+        banner_image_url: banner_image_url || "",
+        logo_url: logo_url || ""
       });
     }
   }
@@ -89,11 +91,13 @@ export default class PortfolioForm extends Component {
       addedfile: file => this.setState({ thumb_image: file })
     };
   }
+
   handleBannerDrop() {
     return {
       addedfile: file => this.setState({ banner_image: file })
     };
   }
+
   handleLogoDrop() {
     return {
       addedfile: file => this.setState({ logo: file })
@@ -127,12 +131,15 @@ export default class PortfolioForm extends Component {
     if (this.state.thumb_image) {
       formData.append("portfolio_item[thumb_image]", this.state.thumb_image);
     }
+
     if (this.state.banner_image) {
       formData.append("portfolio_item[banner_image]", this.state.banner_image);
     }
+
     if (this.state.logo) {
       formData.append("portfolio_item[logo]", this.state.logo);
     }
+
     return formData;
   }
 
@@ -143,7 +150,7 @@ export default class PortfolioForm extends Component {
   }
 
   handleSubmit(event) {
-    Axios({
+    axios({
       method: this.state.apiAction,
       url: this.state.apiUrl,
       data: this.buildForm(),
@@ -159,7 +166,7 @@ export default class PortfolioForm extends Component {
         this.setState({
           name: "",
           description: "",
-          category: "Education",
+          category: "eCommerce",
           position: "",
           url: "",
           thumb_image: "",
@@ -176,7 +183,7 @@ export default class PortfolioForm extends Component {
         });
       })
       .catch(error => {
-        console.log("error", error);
+        console.log("portfolio form handleSubmit error", error);
       });
 
     event.preventDefault();
@@ -218,9 +225,9 @@ export default class PortfolioForm extends Component {
             onChange={this.handleChange}
             className="select-element"
           >
-            <option value="Education">Education</option>
-            <option value="Civil Engineering">Civil Engineering</option>
-            <option value="Software Development">Software Development</option>
+            <option value="eCommerce">eCommerce</option>
+            <option value="Scheduling">Scheduling</option>
+            <option value="Enterprise">Enterprise</option>
           </select>
         </div>
 
@@ -234,7 +241,7 @@ export default class PortfolioForm extends Component {
           />
         </div>
 
-        <div className="image-uploaders three-column">
+        <div className="image-uploaders">
           {this.state.thumb_image_url && this.state.editMode ? (
             <div className="portfolio-manager-image-wrapper">
               <img src={this.state.thumb_image_url} />
