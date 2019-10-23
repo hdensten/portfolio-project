@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import BlogItem from "../blog/blog-item";
@@ -65,6 +66,7 @@ class Blog extends Component {
     this.setState({
       currentPage: this.state.currentPage + 1
     });
+
     axios
       .get(
         `https://hannahdensten.devcamp.space/portfolio/portfolio_blogs?page=${this.state.currentPage}`,
@@ -73,6 +75,7 @@ class Blog extends Component {
         }
       )
       .then(response => {
+        console.log("getting", response.data);
         this.setState({
           blogItems: this.state.blogItems.concat(response.data.portfolio_blogs),
           totalCount: response.data.meta.total_records,
