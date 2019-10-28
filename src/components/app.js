@@ -56,7 +56,7 @@ export default class App extends Component {
       .then(response => {
         const loggedIn = response.data.logged_in;
         const loggedInStatus = this.state.loggedInStatus;
-
+        console.log(response);
         if (loggedIn && loggedInStatus === "LOGGED_IN") {
           return loggedIn;
         } else if (loggedIn && loggedInStatus === "NOT_LOGGED_IN") {
@@ -75,7 +75,7 @@ export default class App extends Component {
   }
 
   componentDidMount() {
-    this.checkLoginStatus;
+    this.checkLoginStatus();
   }
 
   authorizedPages() {
